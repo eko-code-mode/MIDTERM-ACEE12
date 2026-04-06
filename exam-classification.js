@@ -118,12 +118,130 @@
     "Third generation",
   ];
 
+  const ENUM_STEMS = [
+    "Enumerate the 5 generations of computers in order, stating the main electronic component of each (one line per generation).",
+    "Give 4 examples of first generation computers.",
+    "Enumerate 3 high-level programming languages introduced during the second generation.",
+    "Give 4 examples of fourth generation computers.",
+    "Enumerate the 5 categories used to compare and classify each generation of computers based on the topic.",
+    "List 5 input/output devices associated with fifth generation computers.",
+    "Enumerate the 5 programming language stages across all generations in order from lowest to highest level.",
+    "Give 4 examples of third generation computers.",
+    "Enumerate 4 characteristics that improved with every new generation of computers.",
+    "List the 2 types of semiconductor memory from the fourth generation with one key characteristic each (format: RAM — volatile … or one line per type).",
+  ];
+
+  const CLASS_GEN_ROWS = [
+    { L: ["first", "1st"], R: ["vacuum tube", "vacuum tubes", "vacuum"] },
+    { L: ["second", "2nd"], R: ["transistor", "transistors"] },
+    { L: ["third", "3rd"], R: ["integrated circuit", "integrated circuits", "ic"] },
+    { L: ["fourth", "4th"], R: ["vlsi", "microprocessor", "microprocessors"] },
+    { L: ["fifth", "5th"], R: ["ulsi", "artificial intelligence", "ai"] },
+  ];
+
+  const PROG_STAGES_ORDER = [
+    ["machine language", "machine code"],
+    ["assembly", "assembly language"],
+    ["high level", "highlevel", "high level language"],
+    [
+      "fourth generation language",
+      "third and fourth",
+      "third and fourth generation",
+      "4gl",
+      "combined",
+    ],
+    ["natural language", "human language", "fifth generation"],
+  ];
+
+  const IO_FIFTH_BUCKETS = [
+    ["touchscreen", "touch screen"],
+    ["speech", "voice recognition", "voice input", "voice"],
+    ["trackpad", "touchpad"],
+    ["scanner", "light scanner"],
+    ["keyboard"],
+    ["mouse"],
+    ["monitor"],
+    ["pen", "stylus"],
+    ["printer"],
+  ];
+
+  const MEM_CHAR_PAIRS = [
+    { mem: ["ram", "random access memory"], char: ["volatile", "lost when power", "lost when", "power off", "contents lost"] },
+    { mem: ["rom", "read only memory"], char: ["non volatile", "nonvolatile", "retained", "retains", "when power"] },
+  ];
+
+  const ENUM_OFFICIAL = [
+    "1st–5th generation + component in order — see key",
+    "ENIAC; UNIVAC 1; IBM 650; IBM 701",
+    "FORTRAN; ALGOL; COBOL",
+    "IBM PC; Apple II; Macintosh; STAR 1000",
+    "Five comparison categories — see key",
+    "Five fifth-gen I/O devices — see key",
+    "Machine → Assembly → HLL → 4GL/combined → Natural — see key",
+    "IBM 360/370; PDP-11; UNIVAC 1108 — see key",
+    "Speed; Size; Power; Reliability/accuracy — see key",
+    "RAM + volatile; ROM + non-volatile — see key",
+  ];
+
+  const ENUM_KEY_DETAIL = [
+    {
+      title: "1. Five generations and main components",
+      lines: [
+        "First generation — Vacuum tube",
+        "Second generation — Transistor",
+        "Third generation — Integrated Circuit (IC)",
+        "Fourth generation — VLSI and Microprocessor",
+        "Fifth generation — ULSI and Artificial Intelligence (AI)",
+      ],
+    },
+    { title: "2. First generation examples", lines: ["ENIAC", "UNIVAC 1", "IBM 650", "IBM 701"] },
+    { title: "3. Second-generation HLLs", lines: ["FORTRAN (1956)", "ALGOL (1958)", "COBOL (1959)"] },
+    { title: "4. Fourth generation examples", lines: ["IBM PC", "Apple II", "Apple Macintosh", "STAR 1000"] },
+    {
+      title: "5. Comparison categories",
+      lines: [
+        "Main electronic component",
+        "Size and power consumption",
+        "Speed and reliability",
+        "Memory type",
+        "Input/output devices",
+      ],
+    },
+    {
+      title: "6. Fifth generation I/O (others ok: mouse, monitor, pen, printer)",
+      lines: ["Touchscreen", "Speech input (voice recognition)", "Trackpad / touchpad", "Light scanner", "Keyboard"],
+    },
+    {
+      title: "7. Programming stages (order)",
+      lines: [
+        "Machine language (1st generation)",
+        "Assembly language (2nd generation)",
+        "High-level language (3rd generation)",
+        "Third and fourth generation languages combined (4th generation)",
+        "Natural / human language (5th generation)",
+      ],
+    },
+    { title: "8. Third generation examples", lines: ["IBM 360", "IBM 370", "PDP-11", "UNIVAC 1108"] },
+    {
+      title: "9. Improvements each generation",
+      lines: ["Speed", "Size (smaller)", "Power consumption (lower)", "Reliability and accuracy"],
+    },
+    {
+      title: "10. Fourth generation semiconductor memory",
+      lines: [
+        "RAM (Random-Access Memory) — volatile; contents lost when power off",
+        "ROM (Read-Only Memory) — non-volatile; contents retained when power off",
+      ],
+    },
+  ];
+
   const LETTERS = ["A", "B", "C", "D"];
 
   function normalize(s) {
     return String(s || "")
       .toLowerCase()
       .replace(/[’']/g, "'")
+      .replace(/\//g, " ")
       .replace(/-/g, " ")
       .replace(/[()[\]]/g, "")
       .replace(/\s+/g, " ")
@@ -143,6 +261,183 @@
       if (a.length >= 4 && (n.includes(a) || a.includes(n))) return true;
       return false;
     });
+  }
+
+  function parseEnumLines(raw) {
+    return String(raw || "")
+      .split(/\r?\n/)
+      .map(function (line) {
+        return normalize(line.replace(/^\s*\d+[\.\)]\s*/, "").replace(/^[-*•]\s*/, ""));
+      })
+      .filter(Boolean);
+  }
+
+  function enumTokenMatch(userLineNorm, phrase) {
+    const p = normalize(phrase);
+    if (!p || !userLineNorm) return false;
+    if (userLineNorm === p) return true;
+    if (p.length >= 4 && userLineNorm.includes(p)) return true;
+    if (p.length <= 3 && userLineNorm === p) return true;
+    return false;
+  }
+
+  function enumLineMatchNorm(userLineNorm, keyAlts) {
+    if (!userLineNorm) return false;
+    return keyAlts.some(function (key) {
+      return enumTokenMatch(userLineNorm, key);
+    });
+  }
+
+  function genTechRowOk(lineNorm, row) {
+    const L = row.L.some(function (a) {
+      return enumTokenMatch(lineNorm, a);
+    });
+    const R = row.R.some(function (a) {
+      return enumTokenMatch(lineNorm, a);
+    });
+    return L && R;
+  }
+
+  function genTechOrdered(userLines, rows) {
+    if (userLines.length < rows.length) return false;
+    for (let i = 0; i < rows.length; i++) {
+      if (!genTechRowOk(userLines[i], rows[i])) return false;
+    }
+    return true;
+  }
+
+  function enumSetCorrect(userLines, keysPerLine) {
+    if (userLines.length < keysPerLine.length) return false;
+    const used = {};
+    for (let e = 0; e < keysPerLine.length; e++) {
+      let found = false;
+      for (let u = 0; u < userLines.length; u++) {
+        if (used[u]) continue;
+        if (enumLineMatchNorm(userLines[u], keysPerLine[e])) {
+          used[u] = true;
+          found = true;
+          break;
+        }
+      }
+      if (!found) return false;
+    }
+    return true;
+  }
+
+  function enumOrderedLines(userLines, keysPerLine) {
+    if (userLines.length < keysPerLine.length) return false;
+    for (let i = 0; i < keysPerLine.length; i++) {
+      if (!enumLineMatchNorm(userLines[i], keysPerLine[i])) return false;
+    }
+    return true;
+  }
+
+  function tryMatchIoBuckets(lines, buckets, lineIdx, usedBucket) {
+    if (lineIdx === lines.length) return true;
+    for (let b = 0; b < buckets.length; b++) {
+      if (usedBucket[b]) continue;
+      if (enumLineMatchNorm(lines[lineIdx], buckets[b])) {
+        usedBucket[b] = true;
+        if (tryMatchIoBuckets(lines, buckets, lineIdx + 1, usedBucket)) return true;
+        usedBucket[b] = false;
+      }
+    }
+    return false;
+  }
+
+  function enumFiveIoDevices(userLines) {
+    if (userLines.length < 5) return false;
+    const first5 = userLines.slice(0, 5);
+    return tryMatchIoBuckets(first5, IO_FIFTH_BUCKETS, 0, {});
+  }
+
+  function dualMemCharCorrect(userLines, pairDefs) {
+    if (userLines.length < 2) return false;
+    const used = {};
+    for (let p = 0; p < pairDefs.length; p++) {
+      let found = false;
+      const memAlts = pairDefs[p].mem;
+      const charAlts = pairDefs[p].char;
+      for (let u = 0; u < userLines.length; u++) {
+        if (used[u]) continue;
+        const ln = userLines[u];
+        const memOk = memAlts.some(function (x) {
+          return enumTokenMatch(ln, x);
+        });
+        const charOk = charAlts.some(function (x) {
+          return enumTokenMatch(ln, x);
+        });
+        if (memOk && charOk) {
+          used[u] = true;
+          found = true;
+          break;
+        }
+      }
+      if (!found) return false;
+    }
+    return true;
+  }
+
+  function enumItemCorrect(idx, raw) {
+    const userLines = parseEnumLines(raw);
+    if (userLines.length === 0) return false;
+    switch (idx) {
+      case 0:
+        return genTechOrdered(userLines, CLASS_GEN_ROWS);
+      case 1:
+        return enumSetCorrect(userLines, [["eniac"], ["univac"], ["ibm 650", "650"], ["ibm 701", "701"]]);
+      case 2:
+        return enumSetCorrect(userLines, [["fortran"], ["algol"], ["cobol"]]);
+      case 3:
+        return enumSetCorrect(userLines, [
+          ["ibm pc"],
+          ["apple ii"],
+          ["macintosh", "apple macintosh"],
+          ["star 1000", "star1000"],
+        ]);
+      case 4:
+        return enumSetCorrect(userLines, [
+          ["main electronic component", "electronic component"],
+          ["size", "power consumption", "size and power"],
+          ["speed", "reliability", "speed and reliability"],
+          ["memory type"],
+          ["input output", "input/output", "i/o", "output devices"],
+        ]);
+      case 5:
+        return enumFiveIoDevices(userLines);
+      case 6:
+        return enumOrderedLines(userLines, PROG_STAGES_ORDER);
+      case 7:
+        return enumSetCorrect(userLines, [
+          ["ibm 360", "360"],
+          ["ibm 370", "370"],
+          ["pdp 11", "pdp11"],
+          ["univac 1108", "1108"],
+        ]);
+      case 8:
+        return enumSetCorrect(userLines, [
+          ["speed", "faster"],
+          ["size", "smaller", "compact"],
+          ["power", "consumption", "lower power"],
+          ["reliability", "accuracy"],
+        ]);
+      case 9:
+        return dualMemCharCorrect(userLines, MEM_CHAR_PAIRS);
+      default:
+        return false;
+    }
+  }
+
+  function applyEnumGlow(num) {
+    const idx = num - 1;
+    if (idx < 0 || idx >= ENUM_STEMS.length) return;
+    const block = document.querySelector('.enum-item[data-enum="' + num + '"]');
+    const ta = document.getElementById("enum_" + num);
+    if (!block || !ta) return;
+    block.classList.remove("answer-correct", "answer-incorrect");
+    if (!String(ta.value).trim()) return;
+    const ok = enumItemCorrect(idx, ta.value);
+    block.classList.add(ok ? "answer-correct" : "answer-incorrect");
   }
 
   function applyMcItemGlow(qnum) {
@@ -231,6 +526,39 @@
     container.appendChild(frag);
   }
 
+  function renderEnum() {
+    const container = document.getElementById("enum-container");
+    if (!container) return;
+    const frag = document.createDocumentFragment();
+    ENUM_STEMS.forEach(function (stem, i) {
+      const num = i + 1;
+      const wrap = document.createElement("div");
+      wrap.className = "enum-item";
+      wrap.setAttribute("data-enum", String(num));
+      const lab = document.createElement("label");
+      lab.setAttribute("for", "enum_" + num);
+      lab.textContent = num + ". " + stem;
+      const ta = document.createElement("textarea");
+      ta.id = "enum_" + num;
+      ta.name = "enum_" + num;
+      let rows = "6";
+      if (num === 1) rows = "8";
+      if (num === 5) rows = "8";
+      if (num === 6) rows = "7";
+      if (num === 7) rows = "7";
+      if (num === 10) rows = "4";
+      ta.setAttribute("rows", rows);
+      ta.setAttribute("autocomplete", "off");
+      ta.addEventListener("input", function () {
+        applyEnumGlow(num);
+      });
+      wrap.appendChild(lab);
+      wrap.appendChild(ta);
+      frag.appendChild(wrap);
+    });
+    container.appendChild(frag);
+  }
+
   function renderAnswerKey() {
     const el = document.getElementById("answer-key-content");
     const mcTitle = document.createElement("p");
@@ -257,6 +585,32 @@
     el.appendChild(mcGrid);
     el.appendChild(idTitle);
     el.appendChild(idGrid);
+    const enTitle = document.createElement("p");
+    enTitle.innerHTML = "<strong>Part III — Enumeration</strong>";
+    enTitle.style.marginTop = "1rem";
+    const enWrap = document.createElement("div");
+    enWrap.className = "enum-key-block";
+    ENUM_KEY_DETAIL.forEach(function (block) {
+      const sec = document.createElement("div");
+      sec.style.marginTop = "0.85rem";
+      const ht = document.createElement("p");
+      ht.style.margin = "0 0 0.35rem";
+      ht.style.fontWeight = "600";
+      ht.textContent = block.title;
+      sec.appendChild(ht);
+      const ul = document.createElement("ul");
+      ul.style.margin = "0";
+      ul.style.paddingLeft = "1.25rem";
+      block.lines.forEach(function (ln) {
+        const li = document.createElement("li");
+        li.textContent = ln;
+        ul.appendChild(li);
+      });
+      sec.appendChild(ul);
+      enWrap.appendChild(sec);
+    });
+    el.appendChild(enTitle);
+    el.appendChild(enWrap);
   }
 
   function clearAnswerGlows() {
@@ -264,6 +618,9 @@
       el.classList.remove("answer-correct", "answer-incorrect");
     });
     document.querySelectorAll(".id-item.answer-correct, .id-item.answer-incorrect").forEach(function (el) {
+      el.classList.remove("answer-correct", "answer-incorrect");
+    });
+    document.querySelectorAll(".enum-item.answer-correct, .enum-item.answer-incorrect").forEach(function (el) {
       el.classList.remove("answer-correct", "answer-incorrect");
     });
   }
@@ -293,10 +650,21 @@
       idRows.push({ num: i + 1, user: raw.trim() || "—", ok: ok, official: ID_OFFICIAL[i] });
     }
 
+    let enumCorrect = 0;
+    const enumRows = [];
+    for (let i = 0; i < ENUM_STEMS.length; i++) {
+      const ta = document.getElementById("enum_" + (i + 1));
+      const raw = ta ? ta.value : "";
+      const ok = enumItemCorrect(i, raw);
+      if (ok) enumCorrect++;
+      enumRows.push({ num: i + 1, user: raw.trim() || "—", ok: ok, official: ENUM_OFFICIAL[i] });
+    }
+
     const totalMC = MC_QUESTIONS.length;
     const totalID = ID_QUESTIONS.length;
-    const total = totalMC + totalID;
-    const score = mcCorrect + idCorrect;
+    const totalEnum = ENUM_STEMS.length;
+    const total = totalMC + totalID + totalEnum;
+    const score = mcCorrect + idCorrect + enumCorrect;
 
     const summary = document.getElementById("results-summary");
     summary.textContent =
@@ -312,6 +680,10 @@
       idCorrect +
       "/" +
       totalID +
+      "; Part III: " +
+      enumCorrect +
+      "/" +
+      totalEnum +
       ").";
 
     const detail = document.getElementById("results-detail");
@@ -337,6 +709,14 @@
         "</td></tr>";
     });
     html += "</tbody></table>";
+
+    html += "<h3>Part III detail (Enumeration)</h3><table><thead><tr><th>#</th><th>Your answer</th><th>Key (summary)</th></tr></thead><tbody>";
+    enumRows.forEach(function (r) {
+      const cls = r.ok ? "correct" : "incorrect";
+      const u = r.user.length > 200 ? r.user.slice(0, 200) + "…" : r.user;
+      html += "<tr class='" + cls + "'><td>" + r.num + "</td><td>" + escapeHtml(u) + "</td><td>" + escapeHtml(r.official) + "</td></tr>";
+    });
+    html += "</tbody></table>";
     detail.innerHTML = html;
 
     mcRows.forEach(function (r) {
@@ -347,6 +727,12 @@
     });
     idRows.forEach(function (r) {
       const block = document.querySelector('.id-item[data-id="' + r.num + '"]');
+      if (block) {
+        block.classList.add(r.ok ? "answer-correct" : "answer-incorrect");
+      }
+    });
+    enumRows.forEach(function (r) {
+      const block = document.querySelector('.enum-item[data-enum="' + r.num + '"]');
       if (block) {
         block.classList.add(r.ok ? "answer-correct" : "answer-incorrect");
       }
@@ -365,6 +751,7 @@
   function init() {
     renderMC();
     renderID();
+    renderEnum();
     renderAnswerKey();
 
     const today = new Date().toISOString().slice(0, 10);

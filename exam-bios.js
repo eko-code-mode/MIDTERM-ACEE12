@@ -105,6 +105,173 @@
     "Dual In-line Package",
   ];
 
+  const ENUM_STEMS = [
+    "Enumerate the 4 main components of the Motherboard BIOS.",
+    "Enumerate the 4 steps in updating the BIOS (in order).",
+    "Enumerate the 3 layers of the computer system from highest to lowest (one per line, top to bottom).",
+    "Enumerate the 2 common BIOS chip package types and their full names (one line each, e.g. DIP — Dual In-line Package …).",
+    "Enumerate 4 alternative keys (aside from Del) that can be used to access the BIOS setup utility depending on the manufacturer (see answer key if listing Del as a fourth).",
+    "Enumerate the 7 actions performed by the AwardFlash command A:\\>awdflash bios.bin /cc /cd /cp /py /sn /cks /r (in the order given in the answer key).",
+    "Enumerate the 3 types of data that are cleared after flashing the BIOS using the recommended AwardFlash command.",
+    "Enumerate 3 things that can go wrong or happen if the BIOS is NOT properly configured or optimized.",
+    "Enumerate the 3 components that make up the complete BIOS of a computer system.",
+    "Enumerate the 4 chapters of the book and their corresponding topics (Chapter 1 first, then 2–4).",
+  ];
+
+  const ENUM_OFFICIAL = [
+    "POST; System Configuration Utility; Bootstrap Loader; BIOS Interface",
+    "Determine version → obtain update → prepare flash disk → flash BIOS",
+    "Application → OS → Hardware",
+    "DIP (Dual In-line Package); PLCC (Plastic Leaded Chip Carrier)",
+    "Esc; F2; Ctrl-Alt-Esc; (Del ok per key note)",
+    "Seven AwardFlash actions in key order — see key",
+    "CMOS; DMI; PnP/ESCD",
+    "Instability; slower boot; slower performance",
+    "Motherboard BIOS; add-on card BIOS; device drivers",
+    "Ch.1 What Is BIOS … through Ch.4 in-depth options",
+  ];
+
+  const ENUM_KEY_DETAIL = [
+    {
+      title: "1. Four main components of Motherboard BIOS",
+      lines: [
+        "Power-On Diagnostic Tests (POST)",
+        "System Configuration Utility",
+        "Bootstrap Loader",
+        "BIOS Interface",
+      ],
+    },
+    {
+      title: "2. Four steps in updating the BIOS",
+      lines: [
+        "Determine your BIOS version",
+        "Obtain the appropriate BIOS update",
+        "Prepare a BIOS flash disk",
+        "Flash the motherboard BIOS",
+      ],
+    },
+    {
+      title: "3. Three layers (highest to lowest)",
+      lines: ["Application", "Operating System", "Hardware"],
+    },
+    {
+      title: "4. Two common BIOS chip package types",
+      lines: [
+        "DIP — Dual In-line Package (rectangular)",
+        "PLCC — Plastic Leaded Chip Carrier (square)",
+      ],
+    },
+    {
+      title: "5. Alternative keys to access BIOS setup",
+      lines: [
+        "Esc (Escape) key",
+        "F2 key",
+        "Ctrl-Alt-Esc key combination",
+        "Del (Delete) key (primary for AwardBIOS; question says aside from Del — Esc, F2, Ctrl-Alt-Esc are the main alternatives)",
+      ],
+    },
+    {
+      title: "6. Seven actions of the AwardFlash command (key order)",
+      lines: [
+        "Skip backup of original BIOS image",
+        "Show the BIOS image file's checksum",
+        "Program the Flash BIOS with the BIOS image file",
+        "Clear CMOS data after programming",
+        "Clear DMI data after programming",
+        "Clear PnP (ESCD) data after programming",
+        "Automatically reset the computer after programming is complete",
+      ],
+    },
+    {
+      title: "7. Three types of data cleared after flashing",
+      lines: ["CMOS data", "DMI data", "PnP / ESCD data"],
+    },
+    {
+      title: "8. If BIOS is not optimized",
+      lines: [
+        "System instability and crashes",
+        "Longer boot-up / device initialization time",
+        "Overall slower computer performance",
+      ],
+    },
+    {
+      title: "9. Three parts of the complete BIOS",
+      lines: [
+        "Motherboard BIOS",
+        "BIOS of all add-on cards in the system",
+        "Device drivers",
+      ],
+    },
+    {
+      title: "10. Four chapters and topics",
+      lines: [
+        "Chapter 1 — What Is the BIOS",
+        "Chapter 2 — Troubleshooting / Getting out of trouble during optimization",
+        "Chapter 3 — Quick guide to BIOS options and optimization recommendations",
+        "Chapter 4 — In-depth / detailed explanation of every BIOS option",
+      ],
+    },
+  ];
+
+  const ENUM_BIOS_COMPONENTS = [
+    ["post", "power on", "diagnostic"],
+    ["system configuration", "configuration utility", "setup utility"],
+    ["bootstrap", "bootstrap loader"],
+    ["bios interface"],
+  ];
+
+  const ENUM_BIOS_UPDATE_STEPS = [
+    ["determine", "bios version", "your bios", "current bios"],
+    ["obtain", "appropriate", "update", "download", "manufacturer"],
+    ["prepare", "flash disk", "bootable", "bios flash disk"],
+    ["flash", "motherboard bios", "flashing", "program the flash"],
+  ];
+
+  const ENUM_SYS_LAYERS = [["application", "applications"], ["operating system", "os"], ["hardware"]];
+
+  const ENUM_PKG_PAIRS = [
+    { type: ["dip"], name: ["dual in line", "rectangular"] },
+    { type: ["plcc"], name: ["plastic leaded", "square", "chip carrier"] },
+  ];
+
+  const ENUM_BIOS_KEYS_BUCKETS = [
+    ["esc", "escape"],
+    ["f2"],
+    ["ctrl alt esc", "ctrlaltesc"],
+    ["del", "delete"],
+  ];
+
+  const ENUM_AWARD_ACTIONS = [
+    ["skip backup", "no backup", "backup of original", "/sn"],
+    ["checksum", "check sum", "/cks", "show the bios image"],
+    ["program the flash", "program flash", "flash bios", "/py"],
+    ["clear cmos", "cmos data after", "cmos after", "/cc"],
+    ["clear dmi", "dmi data after", "dmi after", "/cd"],
+    ["pnp", "escd", "clear pnp", "/cp"],
+    ["reset", "reboot", "restart", "/r", "automatically reset", "after programming is complete"],
+  ];
+
+  const ENUM_CLEARED_DATA = [["cmos"], ["dmi"], ["pnp", "escd"]];
+
+  const ENUM_BIOS_RISKS = [
+    ["instability", "crash", "crashes", "unstable"],
+    ["boot", "boot up", "initialization", "device initialization"],
+    ["slower", "performance", "overall"],
+  ];
+
+  const ENUM_COMPLETE_BIOS = [
+    ["motherboard bios", "motherboard"],
+    ["add on", "add on cards", "expansion card", "addon", "addon cards", "on cards"],
+    ["device driver", "drivers"],
+  ];
+
+  const ENUM_CHAPTER_ROWS = [
+    { ch: ["chapter 1", "ch 1"], top: ["what is", "bios"] },
+    { ch: ["chapter 2"], top: ["troubleshoot", "getting out", "optimization", "out of trouble"] },
+    { ch: ["chapter 3"], top: ["quick guide", "bios options", "recommendation"] },
+    { ch: ["chapter 4"], top: ["in depth", "indepth", "detailed", "every bios"] },
+  ];
+
   const LETTERS = ["A", "B", "C", "D"];
 
   function normalize(s) {
@@ -112,6 +279,7 @@
       .toLowerCase()
       .replace(/[’']/g, "'")
       .replace(/\//g, " ")
+      .replace(/\+/g, " ")
       .replace(/-/g, " ")
       .replace(/[()[\]]/g, "")
       .replace(/\s+/g, " ")
@@ -144,6 +312,160 @@
       return matchBinRomExtensions(raw);
     }
     return idMatches(raw, ID_KEYS[idx]);
+  }
+
+  function parseEnumLines(raw) {
+    return String(raw || "")
+      .split(/\r?\n/)
+      .map(function (line) {
+        return normalize(line.replace(/^\s*\d+[\.\)]\s*/, "").replace(/^[-*•]\s*/, ""));
+      })
+      .filter(Boolean);
+  }
+
+  function enumTokenMatch(userLineNorm, phrase) {
+    const p = normalize(phrase);
+    if (!p || !userLineNorm) return false;
+    if (userLineNorm === p) return true;
+    if (p.length >= 4 && userLineNorm.includes(p)) return true;
+    if (p.length <= 3 && userLineNorm === p) return true;
+    return false;
+  }
+
+  function enumLineMatchNorm(userLineNorm, keyAlts) {
+    if (!userLineNorm) return false;
+    return keyAlts.some(function (key) {
+      return enumTokenMatch(userLineNorm, key);
+    });
+  }
+
+  function enumSetCorrect(userLines, keysPerLine) {
+    if (userLines.length < keysPerLine.length) return false;
+    const used = {};
+    for (let e = 0; e < keysPerLine.length; e++) {
+      let found = false;
+      for (let u = 0; u < userLines.length; u++) {
+        if (used[u]) continue;
+        if (enumLineMatchNorm(userLines[u], keysPerLine[e])) {
+          used[u] = true;
+          found = true;
+          break;
+        }
+      }
+      if (!found) return false;
+    }
+    return true;
+  }
+
+  function enumOrderedLines(userLines, keysPerLine) {
+    if (userLines.length < keysPerLine.length) return false;
+    for (let i = 0; i < keysPerLine.length; i++) {
+      if (!enumLineMatchNorm(userLines[i], keysPerLine[i])) return false;
+    }
+    return true;
+  }
+
+  function tryMatchBuckets(lines, buckets, lineIdx, usedBucket) {
+    if (lineIdx === lines.length) return true;
+    for (let b = 0; b < buckets.length; b++) {
+      if (usedBucket[b]) continue;
+      if (enumLineMatchNorm(lines[lineIdx], buckets[b])) {
+        usedBucket[b] = true;
+        if (tryMatchBuckets(lines, buckets, lineIdx + 1, usedBucket)) return true;
+        usedBucket[b] = false;
+      }
+    }
+    return false;
+  }
+
+  function enumFourBiosKeys(userLines) {
+    if (userLines.length < 4) return false;
+    return tryMatchBuckets(userLines.slice(0, 4), ENUM_BIOS_KEYS_BUCKETS, 0, {});
+  }
+
+  function dualPackageTypesCorrect(userLines, pairDefs) {
+    if (userLines.length < 2) return false;
+    const used = {};
+    for (let p = 0; p < pairDefs.length; p++) {
+      let found = false;
+      for (let u = 0; u < userLines.length; u++) {
+        if (used[u]) continue;
+        const ln = userLines[u];
+        const typeOk = pairDefs[p].type.some(function (x) {
+          return enumTokenMatch(ln, x);
+        });
+        const nameOk = pairDefs[p].name.some(function (x) {
+          return enumTokenMatch(ln, x);
+        });
+        if (typeOk && nameOk) {
+          used[u] = true;
+          found = true;
+          break;
+        }
+      }
+      if (!found) return false;
+    }
+    return true;
+  }
+
+  function chapterOrderedMatch(userLines) {
+    if (userLines.length < 4) return false;
+    for (let i = 0; i < 4; i++) {
+      const ln = userLines[i];
+      const row = ENUM_CHAPTER_ROWS[i];
+      const chOk = row.ch.some(function (x) {
+        const nx = normalize(x);
+        return nx.length >= 4 ? ln.includes(nx) : ln === nx;
+      });
+      const topOk = row.top.some(function (x) {
+        const nx = normalize(x);
+        if (nx.length >= 4) return ln.includes(nx);
+        return enumTokenMatch(ln, x);
+      });
+      if (!chOk || !topOk) return false;
+    }
+    return true;
+  }
+
+  function enumItemCorrect(idx, raw) {
+    const userLines = parseEnumLines(raw);
+    if (userLines.length === 0) return false;
+    switch (idx) {
+      case 0:
+        return enumSetCorrect(userLines, ENUM_BIOS_COMPONENTS);
+      case 1:
+        return enumOrderedLines(userLines, ENUM_BIOS_UPDATE_STEPS);
+      case 2:
+        return enumOrderedLines(userLines, ENUM_SYS_LAYERS);
+      case 3:
+        return dualPackageTypesCorrect(userLines, ENUM_PKG_PAIRS);
+      case 4:
+        return enumFourBiosKeys(userLines);
+      case 5:
+        return enumOrderedLines(userLines, ENUM_AWARD_ACTIONS);
+      case 6:
+        return enumSetCorrect(userLines, ENUM_CLEARED_DATA);
+      case 7:
+        return enumSetCorrect(userLines, ENUM_BIOS_RISKS);
+      case 8:
+        return enumSetCorrect(userLines, ENUM_COMPLETE_BIOS);
+      case 9:
+        return chapterOrderedMatch(userLines);
+      default:
+        return false;
+    }
+  }
+
+  function applyEnumGlow(num) {
+    const idx = num - 1;
+    if (idx < 0 || idx >= ENUM_STEMS.length) return;
+    const block = document.querySelector('.enum-item[data-enum="' + num + '"]');
+    const ta = document.getElementById("enum_" + num);
+    if (!block || !ta) return;
+    block.classList.remove("answer-correct", "answer-incorrect");
+    if (!String(ta.value).trim()) return;
+    const ok = enumItemCorrect(idx, ta.value);
+    block.classList.add(ok ? "answer-correct" : "answer-incorrect");
   }
 
   function applyMcItemGlow(qnum) {
@@ -232,6 +554,37 @@
     container.appendChild(frag);
   }
 
+  function renderEnum() {
+    const container = document.getElementById("enum-container");
+    if (!container) return;
+    const frag = document.createDocumentFragment();
+    ENUM_STEMS.forEach(function (stem, i) {
+      const num = i + 1;
+      const wrap = document.createElement("div");
+      wrap.className = "enum-item";
+      wrap.setAttribute("data-enum", String(num));
+      const lab = document.createElement("label");
+      lab.setAttribute("for", "enum_" + num);
+      lab.textContent = num + ". " + stem;
+      const ta = document.createElement("textarea");
+      ta.id = "enum_" + num;
+      ta.name = "enum_" + num;
+      let rows = "6";
+      if (num === 6) rows = "10";
+      if (num === 10) rows = "8";
+      if (num === 1 || num === 7 || num === 8 || num === 9) rows = "5";
+      ta.setAttribute("rows", rows);
+      ta.setAttribute("autocomplete", "off");
+      ta.addEventListener("input", function () {
+        applyEnumGlow(num);
+      });
+      wrap.appendChild(lab);
+      wrap.appendChild(ta);
+      frag.appendChild(wrap);
+    });
+    container.appendChild(frag);
+  }
+
   function renderAnswerKey() {
     const el = document.getElementById("answer-key-content");
     const mcTitle = document.createElement("p");
@@ -260,6 +613,32 @@
     el.appendChild(mcGrid);
     el.appendChild(idTitle);
     el.appendChild(idGrid);
+    const enTitle = document.createElement("p");
+    enTitle.innerHTML = "<strong>Part III — Enumeration</strong>";
+    enTitle.style.marginTop = "1rem";
+    const enWrap = document.createElement("div");
+    enWrap.className = "enum-key-block";
+    ENUM_KEY_DETAIL.forEach(function (block) {
+      const sec = document.createElement("div");
+      sec.style.marginTop = "0.85rem";
+      const ht = document.createElement("p");
+      ht.style.margin = "0 0 0.35rem";
+      ht.style.fontWeight = "600";
+      ht.textContent = block.title;
+      sec.appendChild(ht);
+      const ul = document.createElement("ul");
+      ul.style.margin = "0";
+      ul.style.paddingLeft = "1.25rem";
+      block.lines.forEach(function (ln) {
+        const li = document.createElement("li");
+        li.textContent = ln;
+        ul.appendChild(li);
+      });
+      sec.appendChild(ul);
+      enWrap.appendChild(sec);
+    });
+    el.appendChild(enTitle);
+    el.appendChild(enWrap);
   }
 
   function clearAnswerGlows() {
@@ -267,6 +646,9 @@
       el.classList.remove("answer-correct", "answer-incorrect");
     });
     document.querySelectorAll(".id-item.answer-correct, .id-item.answer-incorrect").forEach(function (el) {
+      el.classList.remove("answer-correct", "answer-incorrect");
+    });
+    document.querySelectorAll(".enum-item.answer-correct, .enum-item.answer-incorrect").forEach(function (el) {
       el.classList.remove("answer-correct", "answer-incorrect");
     });
   }
@@ -296,10 +678,21 @@
       idRows.push({ num: i + 1, user: raw.trim() || "—", ok: ok, official: ID_OFFICIAL[i] });
     }
 
+    let enumCorrect = 0;
+    const enumRows = [];
+    for (let i = 0; i < ENUM_STEMS.length; i++) {
+      const ta = document.getElementById("enum_" + (i + 1));
+      const raw = ta ? ta.value : "";
+      const ok = enumItemCorrect(i, raw);
+      if (ok) enumCorrect++;
+      enumRows.push({ num: i + 1, user: raw.trim() || "—", ok: ok, official: ENUM_OFFICIAL[i] });
+    }
+
     const totalMC = MC_QUESTIONS.length;
     const totalID = ID_QUESTIONS.length;
-    const total = totalMC + totalID;
-    const score = mcCorrect + idCorrect;
+    const totalEnum = ENUM_STEMS.length;
+    const total = totalMC + totalID + totalEnum;
+    const score = mcCorrect + idCorrect + enumCorrect;
 
     const summary = document.getElementById("results-summary");
     summary.textContent =
@@ -315,6 +708,10 @@
       idCorrect +
       "/" +
       totalID +
+      "; Part III: " +
+      enumCorrect +
+      "/" +
+      totalEnum +
       ").";
 
     const detail = document.getElementById("results-detail");
@@ -340,6 +737,14 @@
         "</td></tr>";
     });
     html += "</tbody></table>";
+
+    html += "<h3>Part III detail (Enumeration)</h3><table><thead><tr><th>#</th><th>Your answer</th><th>Key (summary)</th></tr></thead><tbody>";
+    enumRows.forEach(function (r) {
+      const cls = r.ok ? "correct" : "incorrect";
+      const u = r.user.length > 200 ? r.user.slice(0, 200) + "…" : r.user;
+      html += "<tr class='" + cls + "'><td>" + r.num + "</td><td>" + escapeHtml(u) + "</td><td>" + escapeHtml(r.official) + "</td></tr>";
+    });
+    html += "</tbody></table>";
     detail.innerHTML = html;
 
     mcRows.forEach(function (r) {
@@ -350,6 +755,12 @@
     });
     idRows.forEach(function (r) {
       const block = document.querySelector('.id-item[data-id="' + r.num + '"]');
+      if (block) {
+        block.classList.add(r.ok ? "answer-correct" : "answer-incorrect");
+      }
+    });
+    enumRows.forEach(function (r) {
+      const block = document.querySelector('.enum-item[data-enum="' + r.num + '"]');
       if (block) {
         block.classList.add(r.ok ? "answer-correct" : "answer-incorrect");
       }
@@ -368,6 +779,7 @@
   function init() {
     renderMC();
     renderID();
+    renderEnum();
     renderAnswerKey();
 
     const today = new Date().toISOString().slice(0, 10);

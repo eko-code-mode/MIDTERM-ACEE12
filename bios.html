@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#1e3a5f" />
-  <title>BIOS — Practice Exam (30 MC + 20 ID)</title>
+  <title>BIOS — Practice Exam (30 MC + 20 ID + 10 Enumeration)</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -12,8 +12,8 @@
     <div class="header-inner">
       <p class="course-code">System firmware</p>
       <p class="subtitle">Practice examination</p>
-      <h1 class="exam-title">📝 BIOS — Multiple Choice &amp; Identification</h1>
-      <p class="instructions-lead">Part I: 30 items, choose the best answer. Part II: 20 identification items. Highlights update as you answer.</p>
+      <h1 class="exam-title">📋 BIOS — Multiple Choice, Identification &amp; Enumeration</h1>
+      <p class="instructions-lead">Part I: 30 multiple choice. Part II: 20 identification. Part III: 10 enumeration items (one line per bullet where noted; order matters for items 2, 3, 6, and 10). Green and red highlights update as you answer.</p>
     </div>
   </header>
 
@@ -49,6 +49,14 @@
         <div id="id-container" class="questions identification"></div>
       </section>
 
+      <section class="exam-part enumeration-block" aria-labelledby="bios-enum-heading">
+        <h2 id="bios-enum-heading" class="part-title">Part III: Enumeration (10 items)</h2>
+        <p class="enumeration-subtitle">List all items being asked. Spelling matters.</p>
+        <hr class="enum-rule" />
+        <p class="part-direction"><strong>Order matters</strong> for items 2 (BIOS update steps), 3 (layers high→low), 6 (AwardFlash actions in the key sequence), and 10 (chapters 1–4). Item 4: two lines (package type — full name; DIP and PLCC). Item 5: four different setup keys (see answer key note on Del).</p>
+        <div id="enum-container" class="questions enumeration-inputs"></div>
+      </section>
+
       <div class="actions">
         <button type="submit" class="btn btn-primary">Submit Examination</button>
         <button type="button" class="btn btn-secondary" id="btn-reset">Clear All Responses</button>
@@ -78,6 +86,7 @@
       <a href="evolution.html">Evolution</a> &middot;
       <a href="classification.html">Classification</a>
     </p>
+    <p class="footer-note">Good luck again, Jericho! 🎯 You're all set!</p>
   </footer>
 
   <script src="exam-bios.js"></script>

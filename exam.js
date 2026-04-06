@@ -105,6 +105,82 @@
     "Very Large Scale Integration",
   ];
 
+  const ENUM_STEMS = [
+    "Enumerate the 3 main components of a Microprocessor.",
+    "Enumerate the 3 steps of how a microprocessor works in correct order.",
+    "Enumerate the 3 classifications/types of Microprocessors.",
+    "Enumerate the 5 features of a Microprocessor.",
+    "Enumerate the 5 key terms used in a Microprocessor.",
+    "Enumerate the 4 types of Special Processors.",
+    "Enumerate the 3 Intel Math Coprocessors and their corresponding main processor (one pair per line, e.g. 8087 with 8086).",
+    "Enumerate the 4 internal components of a DSP processor.",
+    "Enumerate the 4 applications of a DSP processor.",
+    "Enumerate the 4 components found in the block diagram of a basic microcomputer.",
+  ];
+
+  const ENUM_SPECS = [
+    { type: "set", keys: [["alu", "arithmetic logic unit"], ["register array", "registers"], ["control unit"]] },
+    { type: "ordered", keys: [["fetch"], ["decode"], ["execute"]] },
+    {
+      type: "set",
+      keys: [["risc", "risc processors"], ["cisc", "cisc processors"], ["special processor", "special processors"]],
+    },
+    {
+      type: "set",
+      keys: [
+        ["cost effective", "costeffective"],
+        ["size"],
+        ["low power", "low power consumption"],
+        ["versatility"],
+        ["reliability"],
+      ],
+    },
+    {
+      type: "set",
+      keys: [["instruction set"], ["bandwidth"], ["clock speed"], ["word length"], ["data types"]],
+    },
+    {
+      type: "set",
+      keys: [
+        ["coprocessor"],
+        ["input output processor", "i/o processor", "io processor"],
+        ["transputer"],
+        ["dsp", "digital signal processor"],
+      ],
+    },
+    { type: "pairs", pairs: [["8087", "8086"], ["80287", "80286"], ["80387", "80386"]] },
+    {
+      type: "set",
+      keys: [["program memory"], ["data memory"], ["compute engine"], ["input output", "input/output", "i/o"]],
+    },
+    {
+      type: "set",
+      keys: [
+        ["sound and music synthesis", "sound and music"],
+        ["audio and video compression", "audio", "video compression"],
+        ["video signal processing"],
+        ["2d and 3d graphics", "2d and 3d", "graphics acceleration"],
+      ],
+    },
+    {
+      type: "set",
+      keys: [["input device"], ["microprocessor", "micro processor"], ["output device"], ["memory"]],
+    },
+  ];
+
+  const ENUM_OFFICIAL = [
+    "ALU; Register Array; Control Unit",
+    "Fetch → Decode → Execute",
+    "RISC; CISC; Special Processors",
+    "Cost-effective; Size; Low Power Consumption; Versatility; Reliability",
+    "Instruction Set; Bandwidth; Clock Speed; Word Length; Data Types",
+    "Coprocessor; I/O Processor; Transputer; DSP",
+    "8087—8086; 80287—80286; 80387—80386",
+    "Program Memory; Data Memory; Compute Engine; Input/Output",
+    "Sound/Music synthesis; Audio/Video compression; Video signal processing; 2D/3D graphics acceleration",
+    "Input Device; Microprocessor; Output Device; Memory",
+  ];
+
   const LETTERS = ["A", "B", "C", "D"];
 
   function normalize(s) {
@@ -127,6 +203,102 @@
       if (a.length >= 4 && (n.includes(a) || a.includes(n))) return true;
       return false;
     });
+  }
+
+  function parseEnumLines(raw) {
+    return String(raw || "")
+      .split(/\r?\n/)
+      .map(function (line) {
+        return normalize(line.replace(/^\s*\d+[\.\)]\s*/, "").replace(/^[-*•]\s*/, ""));
+      })
+      .filter(Boolean);
+  }
+
+  function enumLineMatch(userLineNorm, keyAlts) {
+    if (!userLineNorm) return false;
+    return keyAlts.some(function (key) {
+      const nk = normalize(key);
+      if (!nk) return false;
+      if (userLineNorm === nk) return true;
+      if (nk.length >= 4 && (userLineNorm.includes(nk) || nk.includes(userLineNorm))) return true;
+      if (nk.length <= 3 && userLineNorm === nk) return true;
+      return false;
+    });
+  }
+
+  function enumSetCorrect(userLines, keysPerLine) {
+    if (userLines.length < keysPerLine.length) return false;
+    const used = {};
+    for (let e = 0; e < keysPerLine.length; e++) {
+      let found = false;
+      for (let u = 0; u < userLines.length; u++) {
+        if (used[u]) continue;
+        if (enumLineMatch(userLines[u], keysPerLine[e])) {
+          used[u] = true;
+          found = true;
+          break;
+        }
+      }
+      if (!found) return false;
+    }
+    return true;
+  }
+
+  function enumOrderedCorrect(userLines, keysPerLine) {
+    if (userLines.length < keysPerLine.length) return false;
+    for (let i = 0; i < keysPerLine.length; i++) {
+      if (!enumLineMatch(userLines[i], keysPerLine[i])) return false;
+    }
+    return true;
+  }
+
+  function enumPairsCorrect(userLines, pairs) {
+    if (userLines.length < pairs.length) return false;
+    const compact = userLines.map(function (l) {
+      return String(l || "").replace(/\s/g, "");
+    });
+    const used = {};
+    for (let p = 0; p < pairs.length; p++) {
+      const d1 = pairs[p][0];
+      const d2 = pairs[p][1];
+      let found = false;
+      for (let u = 0; u < compact.length; u++) {
+        if (used[u]) continue;
+        const c = compact[u];
+        if (c.indexOf(d1) !== -1 && c.indexOf(d2) !== -1) {
+          used[u] = true;
+          found = true;
+          break;
+        }
+      }
+      if (!found) return false;
+    }
+    return true;
+  }
+
+  function enumItemCorrect(idx, raw) {
+    const userLines = parseEnumLines(raw);
+    if (userLines.length === 0) return false;
+    const spec = ENUM_SPECS[idx];
+    if (spec.type === "ordered") {
+      return enumOrderedCorrect(userLines, spec.keys);
+    }
+    if (spec.type === "pairs") {
+      return enumPairsCorrect(userLines, spec.pairs);
+    }
+    return enumSetCorrect(userLines, spec.keys);
+  }
+
+  function applyEnumGlow(num) {
+    const idx = num - 1;
+    if (idx < 0 || idx >= ENUM_STEMS.length) return;
+    const block = document.querySelector('.enum-item[data-enum="' + num + '"]');
+    const ta = document.getElementById("enum_" + num);
+    if (!block || !ta) return;
+    block.classList.remove("answer-correct", "answer-incorrect");
+    if (!String(ta.value).trim()) return;
+    const ok = enumItemCorrect(idx, ta.value);
+    block.classList.add(ok ? "answer-correct" : "answer-incorrect");
   }
 
   function applyMcItemGlow(qnum) {
@@ -215,6 +387,33 @@
     container.appendChild(frag);
   }
 
+  function renderEnum() {
+    const container = document.getElementById("enum-container");
+    if (!container) return;
+    const frag = document.createDocumentFragment();
+    ENUM_STEMS.forEach(function (stem, i) {
+      const num = i + 1;
+      const wrap = document.createElement("div");
+      wrap.className = "enum-item";
+      wrap.setAttribute("data-enum", String(num));
+      const lab = document.createElement("label");
+      lab.setAttribute("for", "enum_" + num);
+      lab.textContent = num + ". " + stem;
+      const ta = document.createElement("textarea");
+      ta.id = "enum_" + num;
+      ta.name = "enum_" + num;
+      ta.setAttribute("rows", "5");
+      ta.setAttribute("autocomplete", "off");
+      ta.addEventListener("input", function () {
+        applyEnumGlow(num);
+      });
+      wrap.appendChild(lab);
+      wrap.appendChild(ta);
+      frag.appendChild(wrap);
+    });
+    container.appendChild(frag);
+  }
+
   function renderAnswerKey() {
     const el = document.getElementById("answer-key-content");
     const mcTitle = document.createElement("p");
@@ -241,6 +440,23 @@
     el.appendChild(mcGrid);
     el.appendChild(idTitle);
     el.appendChild(idGrid);
+    const enTitle = document.createElement("p");
+    enTitle.innerHTML = "<strong>Part III — Enumeration</strong>";
+    enTitle.style.marginTop = "1rem";
+    const enBlock = document.createElement("div");
+    enBlock.className = "enum-key-block";
+    ENUM_OFFICIAL.forEach(function (text, i) {
+      const row = document.createElement("div");
+      row.style.marginTop = "0.65rem";
+      row.style.lineHeight = "1.45";
+      const s = document.createElement("strong");
+      s.textContent = i + 1 + ". ";
+      row.appendChild(s);
+      row.appendChild(document.createTextNode(text));
+      enBlock.appendChild(row);
+    });
+    el.appendChild(enTitle);
+    el.appendChild(enBlock);
   }
 
   function clearAnswerGlows() {
@@ -248,6 +464,9 @@
       el.classList.remove("answer-correct", "answer-incorrect");
     });
     document.querySelectorAll(".id-item.answer-correct, .id-item.answer-incorrect").forEach(function (el) {
+      el.classList.remove("answer-correct", "answer-incorrect");
+    });
+    document.querySelectorAll(".enum-item.answer-correct, .enum-item.answer-incorrect").forEach(function (el) {
       el.classList.remove("answer-correct", "answer-incorrect");
     });
   }
@@ -277,15 +496,41 @@
       idRows.push({ num: i + 1, user: raw.trim() || "—", ok: ok, official: ID_OFFICIAL[i] });
     }
 
+    let enumCorrect = 0;
+    const enumRows = [];
+    for (let i = 0; i < ENUM_STEMS.length; i++) {
+      const ta = document.getElementById("enum_" + (i + 1));
+      const raw = ta ? ta.value : "";
+      const ok = enumItemCorrect(i, raw);
+      if (ok) enumCorrect++;
+      enumRows.push({ num: i + 1, user: raw.trim() || "—", ok: ok, official: ENUM_OFFICIAL[i] });
+    }
+
     const totalMC = MC_QUESTIONS.length;
     const totalID = ID_QUESTIONS.length;
-    const total = totalMC + totalID;
-    const score = mcCorrect + idCorrect;
+    const totalEnum = ENUM_STEMS.length;
+    const total = totalMC + totalID + totalEnum;
+    const score = mcCorrect + idCorrect + enumCorrect;
 
     const summary = document.getElementById("results-summary");
     summary.textContent =
-      "Score: " + score + " / " + total +
-      " (Part I: " + mcCorrect + "/" + totalMC + "; Part II: " + idCorrect + "/" + totalID + ").";
+      "Score: " +
+      score +
+      " / " +
+      total +
+      " (Part I: " +
+      mcCorrect +
+      "/" +
+      totalMC +
+      "; Part II: " +
+      idCorrect +
+      "/" +
+      totalID +
+      "; Part III: " +
+      enumCorrect +
+      "/" +
+      totalEnum +
+      ").";
 
     const detail = document.getElementById("results-detail");
     let html = "<h3>Part I detail</h3><table><thead><tr><th>#</th><th>Your answer</th><th>Key</th></tr></thead><tbody>";
@@ -301,6 +546,22 @@
       html += "<tr class='" + cls + "'><td>" + r.num + "</td><td>" + escapeHtml(r.user) + "</td><td>" + (r.ok ? "Correct" : "Incorrect — key: " + escapeHtml(r.official)) + "</td></tr>";
     });
     html += "</tbody></table>";
+
+    html += "<h3>Part III detail</h3><table><thead><tr><th>#</th><th>Your answer</th><th>Key (summary)</th></tr></thead><tbody>";
+    enumRows.forEach(function (r) {
+      const cls = r.ok ? "correct" : "incorrect";
+      html +=
+        "<tr class='" +
+        cls +
+        "'><td>" +
+        r.num +
+        "</td><td>" +
+        escapeHtml(r.user.length > 120 ? r.user.slice(0, 120) + "…" : r.user) +
+        "</td><td>" +
+        escapeHtml(r.official) +
+        "</td></tr>";
+    });
+    html += "</tbody></table>";
     detail.innerHTML = html;
 
     mcRows.forEach(function (r) {
@@ -311,6 +572,12 @@
     });
     idRows.forEach(function (r) {
       const block = document.querySelector('.id-item[data-id="' + r.num + '"]');
+      if (block) {
+        block.classList.add(r.ok ? "answer-correct" : "answer-incorrect");
+      }
+    });
+    enumRows.forEach(function (r) {
+      const block = document.querySelector('.enum-item[data-enum="' + r.num + '"]');
       if (block) {
         block.classList.add(r.ok ? "answer-correct" : "answer-incorrect");
       }
@@ -329,6 +596,7 @@
   function init() {
     renderMC();
     renderID();
+    renderEnum();
     renderAnswerKey();
 
     const today = new Date().toISOString().slice(0, 10);

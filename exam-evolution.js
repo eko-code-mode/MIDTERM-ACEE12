@@ -95,12 +95,150 @@
     "Superscalar Microprocessor",
   ];
 
+  const ENUM_STEMS = [
+    "Enumerate all 11 types of Microprocessors discussed in the module.",
+    "Enumerate all 8 features of a Microprocessor.",
+    "Enumerate the 5 advantages of Microprocessors.",
+    "Enumerate the 4 disadvantages of Microprocessors.",
+    "Enumerate 3 examples of CISC Microprocessors.",
+    "Enumerate 3 devices or systems that use Digital Signal Multiprocessors (DSP).",
+    "Enumerate the 3 earliest devices (1971–1977) that first used microprocessors.",
+    "Enumerate 3 home appliances where microprocessors act as controllers.",
+    "Enumerate 3 things the Telecom Sector uses microprocessors for.",
+    "Enumerate 3 things the Science Industry uses microprocessors to measure.",
+  ];
+
+  const ENUM_KEYS = [
+    [
+      ["cisc", "complex instruction set"],
+      ["risc", "reduced instruction set"],
+      ["epic", "explicitly parallel instruction"],
+      ["superscalar"],
+      ["asic", "application specific integrated"],
+      ["dsp", "digital signal"],
+      ["simd"],
+      ["symbolic"],
+      ["bit slice", "bitslice", "bit slice processor"],
+      ["transputer"],
+      ["graphics", "graphics processor"],
+    ],
+    [
+      ["low cost", "low in cost", "cost effective"],
+      ["less heat", "generates less heat", "heat"],
+      ["high speed"],
+      ["low power", "consumes low power", "power"],
+      ["portable"],
+      ["small size", "small in size", "size"],
+      ["versatile", "versatility"],
+      ["reliable", "reliability"],
+    ],
+    [
+      ["high speed processing", "high speed"],
+      ["intelligence", "brings intelligence"],
+      ["flexible", "flexibility"],
+      ["compact size", "compact"],
+      ["easy to maintain", "maintain"],
+    ],
+    [
+      ["overheating", "over heating", "continuous use"],
+      ["data size", "performance", "decides the performance"],
+      ["microcontroller", "larger than micro"],
+      ["floating point", "floatingpoint", "doesnt support floating", "no floating", "no fpu", "fpu"],
+    ],
+    [
+      ["386", "80386", "intel 386"],
+      ["486", "80486", "intel 486"],
+      ["pentium"],
+    ],
+    [["radar"], ["home theater", "home theatre", "theater"], ["sonar"]],
+    [
+      ["business calculator", "calculator"],
+      ["commodore pet", "pet"],
+      ["washing machine", "washing"],
+    ],
+    [["toaster", "toasters"], ["television", "tv"], ["stereo", "stereo systems"]],
+    [
+      ["digital telephone", "telephone system"],
+      ["telephone exchange", "exchange"],
+      ["modem"],
+    ],
+    [["speed"], ["temperature"], ["moisture"]],
+  ];
+
+  const ENUM_OFFICIAL = [
+    "11 types: CISC, RISC, EPIC, Superscalar, ASIC, DSP, SIMD, Symbolic, Bit-Slice, Transputer, Graphics — see key",
+    "8 features: cost, heat, speed, power, portable, size, versatile, reliable — see key",
+    "5 advantages — see key",
+    "4 disadvantages — see key",
+    "Intel 386, 486, Pentium — see key",
+    "RADAR, Home Theaters, SONAR",
+    "Business Calculator (1971), Commodore PET (1971), Washing Machine (1977)",
+    "Toasters, Televisions, Stereo Systems",
+    "Digital Telephone, Telephone Exchange, Modem",
+    "Speed, Temperature, Moisture",
+  ];
+
+  const ENUM_KEY_DETAIL = [
+    {
+      title: "1. Eleven types of microprocessors",
+      lines: [
+        "Complex Instruction Set Microprocessors (CISC)",
+        "Reduced Instruction Set Microprocessors (RISC)",
+        "Explicitly Parallel Instruction Computing (EPIC)",
+        "Superscalar Microprocessors",
+        "Application Specific Integrated Circuit (ASIC)",
+        "Digital Signal Multiprocessors (DSP)",
+        "SIMD Processors",
+        "Symbolic Processors",
+        "Bit-Slice Processors",
+        "Transputers",
+        "Graphics Processors",
+      ],
+    },
+    {
+      title: "2. Eight features",
+      lines: ["Low in Cost", "Generates Less Heat", "High Speed", "Consumes Low Power", "Portable", "Small in Size", "Versatile", "Reliable"],
+    },
+    {
+      title: "3. Five advantages",
+      lines: [
+        "High-speed processing",
+        "Brings intelligence to the system",
+        "Flexible in nature",
+        "Compact size",
+        "Easy to maintain",
+      ],
+    },
+    {
+      title: "4. Four disadvantages",
+      lines: [
+        "Leads to overheating due to continuous use",
+        "The data size decides the performance",
+        "Larger than microcontrollers",
+        "Does not support floating-point operations",
+      ],
+    },
+    { title: "5. Three CISC examples", lines: ["Intel 386", "Intel 486", "Pentium"] },
+    { title: "6. Three DSP applications", lines: ["RADAR", "Home Theaters", "SONAR"] },
+    {
+      title: "7. Three earliest devices",
+      lines: ["Business Calculator (1971)", "Commodore PET (1971)", "Washing Machine (1977)"],
+    },
+    { title: "8. Three home appliances", lines: ["Toasters", "Televisions", "Stereo Systems"] },
+    {
+      title: "9. Three telecom uses",
+      lines: ["Digital Telephone System", "Telephone Exchange", "Modem"],
+    },
+    { title: "10. Three science measurements", lines: ["Speed", "Temperature", "Moisture"] },
+  ];
+
   const LETTERS = ["A", "B", "C", "D"];
 
   function normalize(s) {
     return String(s || "")
       .toLowerCase()
       .replace(/[’']/g, "'")
+      .replace(/\//g, " ")
       .replace(/-/g, " ")
       .replace(/[()[\]]/g, "")
       .replace(/\s+/g, " ")
@@ -120,6 +258,65 @@
       if (a.length >= 4 && (n.includes(a) || a.includes(n))) return true;
       return false;
     });
+  }
+
+  function parseEnumLines(raw) {
+    return String(raw || "")
+      .split(/\r?\n/)
+      .map(function (line) {
+        return normalize(line.replace(/^\s*\d+[\.\)]\s*/, "").replace(/^[-*•]\s*/, ""));
+      })
+      .filter(Boolean);
+  }
+
+  function enumTokenMatch(userLineNorm, phrase) {
+    const p = normalize(phrase);
+    if (!p || !userLineNorm) return false;
+    if (userLineNorm === p) return true;
+    if (p.length >= 4 && userLineNorm.includes(p)) return true;
+    if (p.length <= 3 && userLineNorm === p) return true;
+    return false;
+  }
+
+  function enumLineMatchNorm(userLineNorm, keyAlts) {
+    if (!userLineNorm) return false;
+    return keyAlts.some(function (key) {
+      return enumTokenMatch(userLineNorm, key);
+    });
+  }
+
+  function enumSetCorrect(userLines, keysPerLine) {
+    if (userLines.length < keysPerLine.length) return false;
+    const used = {};
+    for (let e = 0; e < keysPerLine.length; e++) {
+      let found = false;
+      for (let u = 0; u < userLines.length; u++) {
+        if (used[u]) continue;
+        if (enumLineMatchNorm(userLines[u], keysPerLine[e])) {
+          used[u] = true;
+          found = true;
+          break;
+        }
+      }
+      if (!found) return false;
+    }
+    return true;
+  }
+
+  function enumItemCorrect(idx, raw) {
+    return enumSetCorrect(parseEnumLines(raw), ENUM_KEYS[idx]);
+  }
+
+  function applyEnumGlow(num) {
+    const idx = num - 1;
+    if (idx < 0 || idx >= ENUM_STEMS.length) return;
+    const block = document.querySelector('.enum-item[data-enum="' + num + '"]');
+    const ta = document.getElementById("enum_" + num);
+    if (!block || !ta) return;
+    block.classList.remove("answer-correct", "answer-incorrect");
+    if (!String(ta.value).trim()) return;
+    const ok = enumItemCorrect(idx, ta.value);
+    block.classList.add(ok ? "answer-correct" : "answer-incorrect");
   }
 
   function applyMcItemGlow(qnum) {
@@ -208,6 +405,33 @@
     container.appendChild(frag);
   }
 
+  function renderEnum() {
+    const container = document.getElementById("enum-container");
+    if (!container) return;
+    const frag = document.createDocumentFragment();
+    ENUM_STEMS.forEach(function (stem, i) {
+      const num = i + 1;
+      const wrap = document.createElement("div");
+      wrap.className = "enum-item";
+      wrap.setAttribute("data-enum", String(num));
+      const lab = document.createElement("label");
+      lab.setAttribute("for", "enum_" + num);
+      lab.textContent = num + ". " + stem;
+      const ta = document.createElement("textarea");
+      ta.id = "enum_" + num;
+      ta.name = "enum_" + num;
+      ta.setAttribute("rows", num === 1 ? "13" : num === 2 ? "10" : "6");
+      ta.setAttribute("autocomplete", "off");
+      ta.addEventListener("input", function () {
+        applyEnumGlow(num);
+      });
+      wrap.appendChild(lab);
+      wrap.appendChild(ta);
+      frag.appendChild(wrap);
+    });
+    container.appendChild(frag);
+  }
+
   function renderAnswerKey() {
     const el = document.getElementById("answer-key-content");
     const mcTitle = document.createElement("p");
@@ -256,6 +480,32 @@
     el.appendChild(mcGrid);
     el.appendChild(idTitle);
     el.appendChild(idGrid);
+    const enTitle = document.createElement("p");
+    enTitle.innerHTML = "<strong>Part III — Enumeration</strong>";
+    enTitle.style.marginTop = "1rem";
+    const enWrap = document.createElement("div");
+    enWrap.className = "enum-key-block";
+    ENUM_KEY_DETAIL.forEach(function (block) {
+      const sec = document.createElement("div");
+      sec.style.marginTop = "0.85rem";
+      const ht = document.createElement("p");
+      ht.style.margin = "0 0 0.35rem";
+      ht.style.fontWeight = "600";
+      ht.textContent = block.title;
+      sec.appendChild(ht);
+      const ul = document.createElement("ul");
+      ul.style.margin = "0";
+      ul.style.paddingLeft = "1.25rem";
+      block.lines.forEach(function (ln) {
+        const li = document.createElement("li");
+        li.textContent = ln;
+        ul.appendChild(li);
+      });
+      sec.appendChild(ul);
+      enWrap.appendChild(sec);
+    });
+    el.appendChild(enTitle);
+    el.appendChild(enWrap);
   }
 
   function clearAnswerGlows() {
@@ -263,6 +513,9 @@
       el.classList.remove("answer-correct", "answer-incorrect");
     });
     document.querySelectorAll(".id-item.answer-correct, .id-item.answer-incorrect").forEach(function (el) {
+      el.classList.remove("answer-correct", "answer-incorrect");
+    });
+    document.querySelectorAll(".enum-item.answer-correct, .enum-item.answer-incorrect").forEach(function (el) {
       el.classList.remove("answer-correct", "answer-incorrect");
     });
   }
@@ -292,10 +545,21 @@
       idRows.push({ num: i + 1, user: raw.trim() || "—", ok: ok, official: ID_OFFICIAL[i] });
     }
 
+    let enumCorrect = 0;
+    const enumRows = [];
+    for (let i = 0; i < ENUM_STEMS.length; i++) {
+      const ta = document.getElementById("enum_" + (i + 1));
+      const raw = ta ? ta.value : "";
+      const ok = enumItemCorrect(i, raw);
+      if (ok) enumCorrect++;
+      enumRows.push({ num: i + 1, user: raw.trim() || "—", ok: ok, official: ENUM_OFFICIAL[i] });
+    }
+
     const totalMC = MC_QUESTIONS.length;
     const totalID = ID_QUESTIONS.length;
-    const total = totalMC + totalID;
-    const score = mcCorrect + idCorrect;
+    const totalEnum = ENUM_STEMS.length;
+    const total = totalMC + totalID + totalEnum;
+    const score = mcCorrect + idCorrect + enumCorrect;
 
     const summary = document.getElementById("results-summary");
     summary.textContent =
@@ -311,6 +575,10 @@
       idCorrect +
       "/" +
       totalID +
+      "; Part III: " +
+      enumCorrect +
+      "/" +
+      totalEnum +
       ").";
 
     const detail = document.getElementById("results-detail");
@@ -336,6 +604,14 @@
         "</td></tr>";
     });
     html += "</tbody></table>";
+
+    html += "<h3>Part III detail (Enumeration)</h3><table><thead><tr><th>#</th><th>Your answer</th><th>Key (summary)</th></tr></thead><tbody>";
+    enumRows.forEach(function (r) {
+      const cls = r.ok ? "correct" : "incorrect";
+      const u = r.user.length > 200 ? r.user.slice(0, 200) + "…" : r.user;
+      html += "<tr class='" + cls + "'><td>" + r.num + "</td><td>" + escapeHtml(u) + "</td><td>" + escapeHtml(r.official) + "</td></tr>";
+    });
+    html += "</tbody></table>";
     detail.innerHTML = html;
 
     mcRows.forEach(function (r) {
@@ -346,6 +622,12 @@
     });
     idRows.forEach(function (r) {
       const block = document.querySelector('.id-item[data-id="' + r.num + '"]');
+      if (block) {
+        block.classList.add(r.ok ? "answer-correct" : "answer-incorrect");
+      }
+    });
+    enumRows.forEach(function (r) {
+      const block = document.querySelector('.enum-item[data-enum="' + r.num + '"]');
       if (block) {
         block.classList.add(r.ok ? "answer-correct" : "answer-incorrect");
       }
@@ -364,6 +646,7 @@
   function init() {
     renderMC();
     renderID();
+    renderEnum();
     renderAnswerKey();
 
     const today = new Date().toISOString().slice(0, 10);
