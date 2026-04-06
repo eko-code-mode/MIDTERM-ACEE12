@@ -1,0 +1,13 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / IDE (optional — remove lines if you want to commit these)
+# .vscode/
+# .idea/
+
+# Logs / temp
+*.log
+*.tmp
+*~

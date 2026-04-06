@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#1e3a5f" />
+  <title>Microprocessor Generations — Practice Exam</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="exam-header">
+    <div class="header-inner">
+      <p class="course-code">Microprocessor Generations</p>
+      <p class="subtitle">Practice Examination</p>
+      <h1 class="exam-title">📝 Microprocessor Generations — Practice Exam</h1>
+      <p class="instructions-lead">Read each item carefully. Select your answers for Part I and supply concise responses for Part II. Green and red highlights update as you answer.</p>
+    </div>
+  </header>
+
+  <main class="exam-main">
+    <section class="student-block" aria-labelledby="student-info-heading">
+      <h2 id="student-info-heading" class="section-label">Examinee Information</h2>
+      <div class="student-grid">
+        <label class="field">
+          <span>Name:</span>
+          <input type="text" name="student_name" id="student_name" autocomplete="name" />
+        </label>
+        <label class="field">
+          <span>Section / Student No.:</span>
+          <input type="text" name="student_id" id="student_id" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span>Date:</span>
+          <input type="date" name="exam_date" id="exam_date" />
+        </label>
+      </div>
+    </section>
+
+    <form id="exam-form" novalidate>
+      <section class="exam-part" aria-labelledby="part1-heading">
+        <h2 id="part1-heading" class="part-title">Part I: Multiple Choice</h2>
+        <p class="part-direction">Choose the letter of the best answer.</p>
+        <div id="mc-container" class="questions"></div>
+      </section>
+
+      <section class="exam-part" aria-labelledby="part2-heading">
+        <h2 id="part2-heading" class="part-title">Part II: Identification</h2>
+        <p class="part-direction">Identify the correct term, name, or processor being described. Write your answer clearly in the space provided.</p>
+        <div id="id-container" class="questions identification"></div>
+      </section>
+
+      <div class="actions">
+        <button type="submit" class="btn btn-primary">Submit Examination</button>
+        <button type="button" class="btn btn-secondary" id="btn-reset">Clear All Responses</button>
+        <button type="button" class="btn btn-outline" id="btn-print">Print / Save as PDF</button>
+      </div>
+    </form>
+
+    <section id="results-panel" class="results-panel hidden" aria-live="polite">
+      <h2 class="part-title">Examination Summary</h2>
+      <p id="results-summary" class="results-summary"></p>
+      <div id="results-detail" class="results-detail"></div>
+    </section>
+
+    <section class="answer-key-section" aria-labelledby="key-heading">
+      <h2 id="key-heading" class="section-label">Reference — Answer Key</h2>
+      <p class="key-note">For instructor or self-check use after attempting all items.</p>
+      <button type="button" class="btn btn-outline" id="btn-toggle-key">Show Answer Key</button>
+      <div id="answer-key-content" class="answer-key-content hidden"></div>
+    </section>
+  </main>
+
+  <footer class="exam-footer">
+    <p>
+      Microprocessor Generations — Practice &middot;
+      <a href="index.html">ACEE12 Midterm</a> &middot;
+      <a href="evolution.html">Evolution</a> &middot;
+      <a href="classification.html">Classification</a> &middot;
+      <a href="bios.html">BIOS</a>
+    </p>
+  </footer>
+
+  <script src="exam-generations.js"></script>
+</body>
+</html>
